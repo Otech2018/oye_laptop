@@ -1,0 +1,31 @@
+
+
+
+
+Invoice.php, payment.php  for charger //sales
+
+oyemart_ospos10
+
+select id as location_id, name as location_name  from $db1.business_locations 
+
+
+
+
+
+
+stopped at refund.php
+
+
+
+
+[25-Jan-2021 09:27:49 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [1044] Access denied for user 'chotayac'@'localhost' to database 'oyemart_laptop' in /home/chotayac/public_html/laptop/script/php/connect.php:29
+Stack trace:
+#0 /home/chotayac/public_html/laptop/script/php/connect.php(29): PDO->__construct('mysql:host=loca...', 'chotayac', 'oyemart1145')
+#1 /home/chotayac/public_html/laptop/script/php/header_sales.php(311): run_query->__construct('select * from u...')
+#2 /home/chotayac/public_html/laptop/sales/sales_home.php(103): require('/home/chotayac/...')
+#3 {main}
+  thrown in /home/chotayac/public_html/laptop/script/php/connect.php on line 29
+[11-Mar-2021 06:48:01 UTC] PHP Warning:  extract() expects parameter 1 to be array, bool given in /home/chotayac/public_html/laptop/script/php/header_sales.php on line 315
+[11-Mar-2021 06:48:01 UTC] PHP Warning:  extract() expects parameter 1 to be array, bool given in /home/chotayac/public_html/laptop/script/php/header_sales.php on line 327
+[27-May-2021 05:42:24 UTC] PHP Warning:  extract() expects parameter 1 to be array, bool given in /home/chotayac/public_html/laptop/script/php/header_sales.php on line 315
+[27-May-2021 05:42:24 UTC] PHP Warning:  extract() expects parameter 1 to be array, bool given in /home/chotayac/public_html/laptop/script/php/header_sales.php on line 327
