@@ -3,6 +3,97 @@
 require "../script/php/connect.php";
 
 
+if ( !class_exists('NumbersToWords') ){
+  /**
+  * NumbersToWords
+  */
+  class NumbersToWords{
+    
+    public static $hyphen      = '-';
+    public static $conjunction = ' and ';
+    public static $separator   = ', ';
+    public static $negative    = 'negative ';
+    public static $decimal     = ' point ';
+    public static $dictionary  = array(
+      0                   => 'zero',
+      1                   => 'one',
+      2                   => 'two',
+      3                   => 'three',
+      4                   => 'four',
+      5                   => 'five',
+      6                   => 'six',
+      7                   => 'seven',
+      8                   => 'eight',
+      9                   => 'nine',
+      10                  => 'ten',
+      11                  => 'eleven',
+      12                  => 'twelve',
+      13                  => 'thirteen',
+      14                  => 'fourteen',
+      15                  => 'fifteen',
+      16                  => 'sixteen',
+      17                  => 'seventeen',
+      18                  => 'eighteen',
+      19                  => 'nineteen',
+      20                  => 'twenty',
+      30                  => 'thirty',
+      40                  => 'fourty',
+      50                  => 'fifty',
+      60                  => 'sixty',
+      70                  => 'seventy',
+      80                  => 'eighty',
+      90                  => 'ninety',
+      100                 => 'hundred',
+      1000                => 'thousand',
+      1000000             => 'million',
+      1000000000          => 'billion',
+      1000000000000       => 'trillion',
+      1000000000000000    => 'quadrillion',
+      1000000000000000000 => 'quintillion'
+    );
+
+    public static function convert($number){
+      if (!is_numeric($number) ) return false;
+      $string = '';
+      switch (true) {
+        case $number < 21:
+            $string = self::$dictionary[$number];
+            break;
+        case $number < 100:
+            $tens   = ((int) ($number / 10)) * 10;
+            $units  = $number % 10;
+            $string = self::$dictionary[$tens];
+            if ($units) {
+                $string .= self::$hyphen . self::$dictionary[$units];
+            }
+            break;
+        case $number < 1000:
+            $hundreds  = $number / 100;
+            $remainder = $number % 100;
+            $string = self::$dictionary[$hundreds] . ' ' . self::$dictionary[100];
+            if ($remainder) {
+                $string .= self::$conjunction . self::convert($remainder);
+            }
+            break;
+        default:
+            $baseUnit = pow(1000, floor(log($number, 1000)));
+            $numBaseUnits = (int) ($number / $baseUnit);
+            $remainder = $number % $baseUnit;
+            $string = self::convert($numBaseUnits) . ' ' . self::$dictionary[$baseUnit];
+            if ($remainder) {
+                $string .= $remainder < 100 ? self::$conjunction : self::$separator;
+                $string .= self::convert($remainder);
+            }
+            break;
+      }
+      return $string;
+    }
+  }//end class
+}//end if
+/**
+ * usage:
+ */
+ 
 
 
 
@@ -125,7 +216,7 @@ require "../script/mlc/script_head.php";
 
 
 
-   <title> Reciept - OYEMART COMPUTERS </title>
+   <title> INVOICE - OYEMART COMPUTERS </title>
 
    <style type="text/css">
    	
@@ -148,21 +239,26 @@ require "../script/mlc/script_head.php";
 <br/><br/>
 
    <div class="container">
-   	<div style="border:5px solid black; border-radius: 50px; padding:20px; font-size:20px;">
-<center>
+   	<div>
+
 
 <table >
    <tr>
-      <td width="30%" > <a href="set_customer.php">  <img src="../script/img/logo.png" alt=" icon" width='70%' /></a> </td>
+      <td width="45%" > <a href="set_customer.php">  <img src="../script/img/logo.png" alt=" icon" height='45px' /></a> 
+      <br/>
+           <b> <i class="fa fa-globe"></i> www.oyemart.com <br/>
+           <i class="fa fa-envelope"></i> sales@oyemart.com </b>
+      
+      </td>
       <td style="padding-left:70px; padding:10px;">
-      <h2 align='center' style="color:#1565c0; line-height:2px; font-size:30px;;">OYEMART NIGERIA LTD.</h2>
+      <h2 align='center' style="color:#1565c0; line-height:2px; font-size:28px;;">OYEMART NIGERIA LTD.</h2>
       <center>
-      <i style="font-size:15px;"><b>Information Technology Administrator and Mechants</b></i> <br/>
+      <i style="font-size:13px;"><b>Information Technology Administrator and Merchants</b></i> <br/>
      
             <!-- <h3 style="color:orange; line-height:2px;">Head Office</h3> -->
-            <span style="font-size:14px; font-weight:bold;">
-            76 TETOW ROAD OWERRI, IMO STATE <br/>
-            07010027465, 09094477365,  <i class="fa fa-whatsapp"></i> 08186318489 </span>
+            <p style="font-size:12px; font-weight:bold; line-height:15px;">
+            76 TETOW ROAD OWERRI, IMO STATE  <br/>
+            07010027465, 09094477365,  <i class="fa fa-whatsapp"></i> 08186318489 </p>
           
       </center>
       </td>
@@ -173,59 +269,99 @@ require "../script/mlc/script_head.php";
 
      <table class="table-bordered table-stripped" widht="90%">
       <tr>
-        <td width="50%"> 
-        	 <span style="font-weight:bold; font-size:23px;"> <i class="fa fa-info-circle"></i> Customer Info</span> <br/>
+        <td width="65%"> 
+        	 <span style="font-weight:bold; font-size:17px;"> <i class="fa fa-info-circle"></i> Customer Info</span> <br/>
+            <div style="font-size:15px;">
+            
         	 <span> <i class="fa fa-user"></i> <?php if(isset($_GET['customer_name']))  { echo  $_GET['customer_name']; } ?></span><br/>
-        	 <span <i class="fa fa-map-marker"></i>  <?php if(isset($_GET['customer_address']))  { echo  $_GET['customer_address']; } ?></span><br/>
+        	 <span> <i class="fa fa-map-marker"></i>  <?php if(isset($_GET['customer_address']))  { echo  $_GET['customer_address']; } ?></span><br/>
         	 <span> <i class="fa fa-phone"></i>  <?php if(isset($_GET['customer_phone']))  { echo  $_GET['customer_phone']; } ?> </span>
+            </div>
         </td>
 
 
 
         <td> 
-        	 <span style="font-weight:bold; font-size:23px;"> <i class="fa fa-gear"></i> Invoice: </span>
-        	 <span style="font-weight: bold; font-size: 30px;">  <?php echo $invoiceNumber; ?></span> <br/>
-        	 <span style="font-weight: bold; font-size: 15px; padding:5px; border-radius: 7px;" class="orange white-text"> Date: <?php echo $paymentDate; ?></span>
-
+        	 <span style="font-weight:bold; font-size:15px;">
+              Invoice:  <?php echo $invoiceNumber; ?> <br/>
+              Internal inventory #:  <?php echo $physicalInvoiceNumber; ?>
+            
+             <br/>Date: <?php echo $paymentDate; ?>
+            </span>
         </td>
       </tr>
        
 
      </table>
-     	<span style="font-weight:bold;">Descriptions of Product/Services</span>
-     <div style="height:270px; border-radius: 22px; border:1px solid black; text-align: left; padding:20px; font-size:17px;">
+     	<h3 align="center" style="font-weight:bold;">Description of Products/Services</h3><hr/>
+     <div style="text-align: left; padding:14px; font-size:15px;">
      Model: 	<?php echo $model ; ?><br/>
      Serial:  <?php echo  $serial  ; ?> <br/>
      Battery Serial:  <?php echo  $battSerial ; ?> <br/>
      Ram:  <?php echo  $RAM  ; ?> <br/>
      Hard Disk:  <?php echo  $HDD ; ?> <br/>  
-     Physical Invoice:  <?php echo  $physicalInvoiceNumber ; ?> <br/>  
      Processor Type:  <?php echo  $processor_type ; ?> <br/>  
 
      Comments:  <?php echo  $invoice_comments ; ?> <br/>  
 
      <!-- Processor:  <?php echo  $processorType." ". $processorSpeed; ?>  <br/> -->
 
-     </div>
+     </div> <hr/>
 
-        </center><br/>
-
-         <span style="font-weight:bold; font-size:23px;"> Price: </span>
-        	 <span style="font-weight: bold; font-size: 32px;"> &#8358;<?php echo number_format("$invoiceAmount",2,".",","); ; ?></span> <br/>
-        	  <span style="font-weight:bold; font-size:23px;"> Paid: &#8358;<?php echo number_format("$totalAmountPaid",2,".",","); ; ?> </span> <br/>
-        	   <span style="font-weight:bold; font-size:23px;"> Balance: &#8358;<?php echo number_format("$balance",2,".",","); ; ?> </span> <br/><br/>
-
+      <span style="font-weight:bold; font-size:17px;"> 
+         Price:  &#8358;<?php echo number_format("$invoiceAmount",2,".",","); ; ?>, &nbsp;
+         Paid: &#8358;<?php echo number_format("$totalAmountPaid",2,".",","); ; ?>, &nbsp;
+         Amount due: &#8358;<?php echo number_format("$balance",2,".",","); ; ?>, &nbsp;
+<br/>
+Amount  in words: <i><?php echo NumbersToWords::convert($invoiceAmount);   ?> naira only </i>
+      </span> 
+ 
            <center>
-        	   <span style="font-weight: bold; font-size: 14px; padding:5px; border-radius: 7px;" class="orange white-text">Prepared and Checked by: <?php echo $user_username; ?> </span>
-              <hr/>
-              <span style="font-size:17px; font-weight:bold;">
-              Bank Name:  <?php echo  $bank_name ; ?> <br/>  
-              Bank Account Number:  <?php echo  $bank_acc_no ; ?> <br/>  
-              Bank Account Name:  <?php echo  $bank_acc_name ; ?> <br/>  
+            <hr>
+              <span style="font-size:13px;">
+              <b> Bank Name:  </b> <?php echo  $bank_name ; ?>, &nbsp; 
+              <b> Bank Account Number: </b>  <?php echo  $bank_acc_no ; ?>  <br/> 
+              <b> Bank Account Name: </b>   <?php echo  $bank_acc_name ; ?> 
               </span>
 
         	</center>
+<hr>
+<i style="font-size:13px; font-weight:bold;">
+By signing, the customer agrees to the following terms: <br/>
+Products sold in good condition cannot be returned or exchanged after payment, 
+except on warranty basis and stated on this invoice. <br/>
+Customers have one week from the date on this invoice to report
+ any issues with batteries. Used laptops/phones have a warranty of  
+ two weeks from the date on this invoice. <br/>
+Warranty for new products are based on the manufacturers' policies. <br/>
+Oyemart reserves the right to cancel any transaction and issue a refund 
+if payment is not received before the payment deadline stated here. <br/>
+Products with physical damages/dents will not be accepted as returns. <br/>
+Product screens, keyboards, touch pads and chargers/adapters are not 
+covered by any warranty once tested ok. 
 
+
+</i>
+
+
+<br><br> <br> <br>
+
+<table>
+   <tr>
+      <td style="padding-right:30px; text-align:center; font-size:16px;">
+      <hr>
+      Customer Sign<br/> &nbsp;
+      
+      </td>
+
+      <td style="padding-left:30px; text-align:center; font-size:16px;">
+      <hr>
+      <?php echo $user_username; ?> <br/>(Oyemart LTD)
+
+      
+      </td>
+   </tr>
+</table>
  </div>
 
 
@@ -235,11 +371,11 @@ require "../script/mlc/script_head.php";
 
 
 <center>
-	<br/><br/>
+	<br/>
 <a href="#!" onclick="print();" class="btn no-print"><i class="fa fa-print"></i> Print</a>
 
 </center>
-<br/><br/><br/><br/>
+
 
 
 

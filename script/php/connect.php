@@ -7,10 +7,10 @@ session_start();
 
 class connect{
 		public  $host = 'localhost';
-			public  $username = 'chotayac';
-			// public  $username = 'ben';
-		// public  $password = '1991';
-		public  $password = 'oyemart1145';
+			// public  $username = 'chotayac';
+			public  $username = 'ben';
+		public  $password = '1991';
+		// public  $password = 'oyemart1145';
 		
 		public  $db ='chotayac_laptop';	
 		
@@ -57,10 +57,10 @@ function loggedin(){
 
 
 
-	  $username1 = 'chotayac';
-	//   $username1 = 'ben';
-		//   $password1 = '1991';
-		  $password1 = 'oyemart1145';
+	//   $username1 = 'chotayac';
+	  $username1 = 'ben';
+		  $password1 = '1991';
+		//   $password1 = 'oyemart1145';
 
 $host1 = 'localhost';
 $db1 ='chotayac_inventroy';
